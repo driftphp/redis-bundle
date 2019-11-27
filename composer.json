@@ -7,11 +7,8 @@
     "php": "^7.1.3",
     "clue/redis-react": "^2.3",
     "drift/http-kernel": "^0.1",
-    "mmoreram/base-bundle": "^2.0"
-  },
-
-  "require-dev": {
-    "mmoreram/symfony-bundle-dependencies": "*"
+    "mmoreram/base-bundle": "^2.0",
+    "mmoreram/symfony-bundle-dependencies": "^2.2"
   },
 
   "autoload": {
