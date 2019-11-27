@@ -1,5 +1,7 @@
 # DriftPHP - Redis adapter
 
+[![CircleCI](https://circleci.com/gh/driftphp/redis-bundle.svg?style=svg)](https://circleci.com/gh/driftphp/redis-bundle)
+
 This is a simple adapter for Redis on top of ReactPHP and DriftPHP. Following
 the same structure that is followed in the Symfony ecosystem, you can use this
 package as a Bundle, only usable under DriftPHP Framework.
