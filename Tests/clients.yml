@@ -1,5 +1,0 @@
-services:
-
-    redis.users_client.test:
-        alias: redis.users_client
-        public: true
