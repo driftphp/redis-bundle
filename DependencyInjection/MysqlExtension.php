@@ -1,14 +1,14 @@
 <?php
 
-namespace Drift\Redis\DependencyInjection;
+namespace Drift\Mysql\DependencyInjection;
 
 use Mmoreram\BaseBundle\DependencyInjection\BaseExtension;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 /**
- * Class RedisExtension
+ * Class MysqlExtension
  */
-class RedisExtension extends BaseExtension
+class MysqlExtension extends BaseExtension
 {
     /**
      * Returns the recommended alias to use in XML.
@@ -19,7 +19,7 @@ class RedisExtension extends BaseExtension
      */
     public function getAlias()
     {
-        return 'redis';
+        return 'mysql';
     }
 
     /**
@@ -62,7 +62,7 @@ class RedisExtension extends BaseExtension
      */
     protected function getConfigurationInstance(): ? ConfigurationInterface
     {
-        return new RedisConfiguration($this->getAlias());
+        return new MysqlConfiguration($this->getAlias());
     }
 
     /**
@@ -81,7 +81,7 @@ class RedisExtension extends BaseExtension
     protected function getParametrizationValues(array $config): array
     {
         return [
-            'redis.clients_configuration' => $config['clients']
+            'mysql.clients_configuration' => $config['clients']
         ];
     }
 }

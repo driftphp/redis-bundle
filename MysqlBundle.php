@@ -1,17 +1,17 @@
 <?php
 
-namespace Drift\Redis;
+namespace Drift\Mysql;
 
-use Drift\Redis\DependencyInjection\CompilerPass\RedisCompilerPass;
-use Drift\Redis\DependencyInjection\RedisExtension;
+use Drift\Mysql\DependencyInjection\CompilerPass\MysqlCompilerPass;
+use Drift\Mysql\DependencyInjection\MysqlExtension;
 use Mmoreram\BaseBundle\BaseBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
- * Class RedisBundle
+ * Class MysqlBundle
  */
-class RedisBundle extends BaseBundle
+class MysqlBundle extends BaseBundle
 {
     /**
      * Returns the bundle's container extension.
@@ -22,7 +22,7 @@ class RedisBundle extends BaseBundle
      */
     public function getContainerExtension()
     {
-        return new RedisExtension();
+        return new MysqlExtension();
     }
 
     /**
@@ -33,7 +33,7 @@ class RedisBundle extends BaseBundle
     public function getCompilerPasses(): array
     {
         return [
-            new RedisCompilerPass()
+            new MysqlCompilerPass()
         ];
     }
 }

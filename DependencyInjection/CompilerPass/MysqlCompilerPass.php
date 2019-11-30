@@ -1,26 +1,25 @@
 <?php
 
-namespace Drift\Redis\DependencyInjection\CompilerPass;
+namespace Drift\Mysql\DependencyInjection\CompilerPass;
 
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Clue\React\Redis\Factory;
+use React\MySQL\Factory;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Clue\React\Redis\Client;
 
 /**
- * Class RedisCompilerPass
+ * Class MysqlCompilerPass
  */
-class RedisCompilerPass implements CompilerPassInterface
+class MysqlCompilerPass implements CompilerPassInterface
 {
     /**
      * You can modify the container here before it is dumped to PHP code.
      */
     public function process(ContainerBuilder $container)
     {
-        $clientsConfiguration = $container->getParameter('redis.clients_configuration');
+        $clientsConfiguration = $container->getParameter('mysql.clients_configuration');
         if (empty($clientsConfiguration)) {
             return;
         }
@@ -30,16 +29,11 @@ class RedisCompilerPass implements CompilerPassInterface
             $clientAlias = $this->createClient($container, $clientConfiguration);
 
             $container->setAlias(
-                "redis.{$clientName}_client",
+                "mysql.{$clientName}_client",
                 $clientAlias
             );
 
-            $container->setAlias(
-                Client::class,
-                $clientAlias
-            );
-
-            $container->registerAliasForArgument($clientAlias, Client::class, "{$clientName} client");
+            $container->registerAliasForArgument($clientAlias, "{$clientName} client");
         }
     }
 
@@ -50,7 +44,7 @@ class RedisCompilerPass implements CompilerPassInterface
      */
     private function createFactory(ContainerBuilder $container)
     {
-        $container->setDefinition('redis.factory', new Definition(
+        $container->setDefinition('mysql.factory', new Definition(
             Factory::class,
             [
                 new Reference('drift.event_loop')
@@ -73,17 +67,17 @@ class RedisCompilerPass implements CompilerPassInterface
     {
         $clientHash = $this->getConfigurationHash($configuration);
 
-        $definitionName = "redis.client.$clientHash";
+        $definitionName = "mysql.client.$clientHash";
         if (!$container->hasDefinition($definitionName)) {
             $definition = new Definition(
-                Client::class,
+                Factory::class,
                 [
-                    RedisUrlBuilder::buildUrlByConfiguration($configuration)
+                    MysqlUrlBuilder::buildUrlByConfiguration($configuration)
                 ]
             );
 
             $definition->setFactory([
-                new Reference('redis.factory'),
+                new Reference('mysql.factory'),
                 'createLazyClient'
             ]);
 
