@@ -8,7 +8,7 @@ package as a Bundle, only usable under DriftPHP Framework.
 
 Some first steps for you!
 
-- [Go to DOCS](https://driftphp.io/#/?id=the-http-kernel)
+- [Go to DOCS](https://driftphp.io/#/?id=redis-adapter)
 
 or
 

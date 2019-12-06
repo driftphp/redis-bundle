@@ -1,5 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Drift Redis Adapter
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Marc Morera <yuhu@mmoreram.com>
+ */
+
+declare(strict_types=1);
+
 namespace Drift\Redis\Tests;
 
 use Clue\React\Redis\Client;
@@ -12,7 +25,7 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
- * Class ConfigurationTest
+ * Class ConfigurationTest.
  */
 class ConfigurationTest extends BaseFunctionalTest
 {
@@ -25,7 +38,7 @@ class ConfigurationTest extends BaseFunctionalTest
     {
         return new DriftBaseKernel([
             FrameworkBundle::class,
-            RedisBundle::class
+            RedisBundle::class,
         ], [
             'parameters' => [
                 'kernel.secret' => 'sdhjshjkds',
@@ -41,22 +54,22 @@ class ConfigurationTest extends BaseFunctionalTest
                     'class' => LoopInterface::class,
                     'factory' => [
                         Factory::class,
-                        'create'
-                    ]
+                        'create',
+                    ],
                 ],
             ],
             'redis' => [
                 'clients' => [
                     'users' => [
-                        'host' => '127.0.0.1'
-                    ]
-                ]
-            ]
+                        'host' => '127.0.0.1',
+                    ],
+                ],
+            ],
         ]);
     }
 
     /**
-     * Test
+     * Test.
      */
     public function testProperClient()
     {
