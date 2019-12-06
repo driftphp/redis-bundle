@@ -1,5 +1,18 @@
 <?php
 
+/*
+ * This file is part of the Drift Redis Adapter
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Marc Morera <yuhu@mmoreram.com>
+ */
+
+declare(strict_types=1);
+
 namespace Drift\Redis;
 
 use Drift\Redis\DependencyInjection\CompilerPass\RedisCompilerPass;
@@ -9,7 +22,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
 
 /**
- * Class RedisBundle
+ * Class RedisBundle.
  */
 class RedisBundle extends BaseBundle
 {
@@ -33,7 +46,7 @@ class RedisBundle extends BaseBundle
     public function getCompilerPasses(): array
     {
         return [
-            new RedisCompilerPass()
+            new RedisCompilerPass(),
         ];
     }
 }

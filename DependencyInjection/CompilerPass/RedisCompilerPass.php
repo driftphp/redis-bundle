@@ -1,17 +1,29 @@
 <?php
 
+/*
+ * This file is part of the Drift Redis Adapter
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Marc Morera <yuhu@mmoreram.com>
+ */
+
+declare(strict_types=1);
+
 namespace Drift\Redis\DependencyInjection\CompilerPass;
 
-
+use Clue\React\Redis\Client;
+use Clue\React\Redis\Factory;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Clue\React\Redis\Factory;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
-use Clue\React\Redis\Client;
 
 /**
- * Class RedisCompilerPass
+ * Class RedisCompilerPass.
  */
 class RedisCompilerPass implements CompilerPassInterface
 {
@@ -44,7 +56,7 @@ class RedisCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * Create factory
+     * Create factory.
      *
      * @param ContainerBuilder $container
      */
@@ -53,24 +65,23 @@ class RedisCompilerPass implements CompilerPassInterface
         $container->setDefinition('redis.factory', new Definition(
             Factory::class,
             [
-                new Reference('drift.event_loop')
+                new Reference('drift.event_loop'),
             ]
         ));
     }
 
     /**
-     * Create client and return it's reference
+     * Create client and return it's reference.
      *
      * @param ContainerBuilder $container
-     * @param array $configuration
+     * @param array            $configuration
      *
      * @return string
      */
     private function createClient(
         ContainerBuilder $container,
         array $configuration
-    ) : string
-    {
+    ): string {
         $clientHash = $this->getConfigurationHash($configuration);
 
         $definitionName = "redis.client.$clientHash";
@@ -78,13 +89,13 @@ class RedisCompilerPass implements CompilerPassInterface
             $definition = new Definition(
                 Client::class,
                 [
-                    RedisUrlBuilder::buildUrlByConfiguration($configuration)
+                    RedisUrlBuilder::buildUrlByConfiguration($configuration),
                 ]
             );
 
             $definition->setFactory([
                 new Reference('redis.factory'),
-                'createLazyClient'
+                'createLazyClient',
             ]);
 
             $container->setDefinition($definitionName, $definition);
@@ -94,7 +105,7 @@ class RedisCompilerPass implements CompilerPassInterface
     }
 
     /**
-     * Get configuration hash
+     * Get configuration hash.
      *
      * @param array $configuration
      *

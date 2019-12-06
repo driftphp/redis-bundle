@@ -1,5 +1,17 @@
 <?php
 
+/*
+ * This file is part of the Drift Redis Adapter
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * Feel free to edit as you please, and have fun.
+ *
+ * @author Marc Morera <yuhu@mmoreram.com>
+ */
+
+declare(strict_types=1);
 
 namespace Drift\Redis\Tests;
 
@@ -7,12 +19,12 @@ use Drift\Redis\DependencyInjection\CompilerPass\RedisUrlBuilder;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class RedisUrlBuilderTest
+ * Class RedisUrlBuilderTest.
  */
 class RedisUrlBuilderTest extends TestCase
 {
     /**
-     * Test build url
+     * Test build url.
      *
      * @dataProvider dataUrlBuilder
      */
@@ -26,11 +38,11 @@ class RedisUrlBuilderTest extends TestCase
     }
 
     /**
-     * Data for test build url
+     * Data for test build url.
      *
      * @return array
      */
-    public function dataUrlBuilder() : array
+    public function dataUrlBuilder(): array
     {
         return [
             ['redis://127.0.0.1:6379', ['host' => '127.0.0.1']],
