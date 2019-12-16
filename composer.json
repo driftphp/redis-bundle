@@ -1,19 +1,31 @@
 {
   "name": "drift/redis-bundle",
+  "description": "Redis Bundle for DriftPHP, a framework on top of Symfony and ReactPHP components",
+  "homepage": "https://github.com/driftphp/redis-bundle",
   "type": "library",
   "license": "MIT",
 
+  "authors": [
+    {
+      "name": "Marc Morera",
+      "email": "yuhu@mmoreram.com"
+    }
+  ],
+
   "require": {
-    "php": "^7.1.3",
+    "php": "^7.3",
+    "symfony/dependency-injection": "^5.0",
     "clue/redis-react": "^2.3",
-    "drift/http-kernel": "^0.1",
-    "mmoreram/base-bundle": "dev-master@dev",
-    "mmoreram/symfony-bundle-dependencies": "^2.2"
+    "drift/http-kernel": "0.1.*",
+    "mmoreram/base-bundle": "^2.1"
   },
 
   "autoload": {
     "psr-4": {
       "Drift\\Redis\\": "."
-    }
+    },
+    "exclude-from-classmap": [
+      "/Tests/"
+    ]
   }
 }
