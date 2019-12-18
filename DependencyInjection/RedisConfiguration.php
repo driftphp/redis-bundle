@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Drift Redis Adapter
+ * This file is part of the DriftPHP Project
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -59,6 +59,10 @@ class RedisConfiguration extends BaseConfiguration
 
                             ->floatNode('idle')
                                 ->defaultNull()
+                            ->end()
+
+                            ->booleanNode('preload')
+                                ->defaultTrue()
                             ->end()
                         ->end()
                     ->end()
