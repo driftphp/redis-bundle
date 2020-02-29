@@ -33,41 +33,59 @@ class RedisCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $clientsConfiguration = $container->getParameter('redis.clients_configuration');
-        if (empty($clientsConfiguration)) {
-            return;
-        }
 
-        $this->createFactory($container);
         foreach ($clientsConfiguration as $clientName => $clientConfiguration) {
-            $clientAlias = $this->createClient($container, $clientConfiguration);
-
-            $container->setAlias(
-                "redis.{$clientName}_client",
-                $clientAlias
+            $this->createClient(
+                $container,
+                $clientName,
+                $clientConfiguration
             );
-
-            $container->setAlias(
-                Client::class,
-                $clientAlias
-            );
-
-            $container->registerAliasForArgument($clientAlias, Client::class, "{$clientName} client");
         }
     }
 
     /**
-     * Create factory.
+     * Create client.
+     *
+     * @param ContainerBuilder $container
+     * @param string           $clientName
+     * @param array            $configuration
+     */
+    protected function createClient(
+        ContainerBuilder $container,
+        string $clientName,
+        array $configuration
+    ) {
+        $this->createFactoryIfMissing($container);
+        $clientAlias = $this->createClientDefinition($container, $configuration);
+
+        $container->setAlias(
+            "redis.{$clientName}_client",
+            $clientAlias
+        );
+
+        $container->setAlias(
+            Client::class,
+            $clientAlias
+        );
+
+        $container->registerAliasForArgument($clientAlias, Client::class, "{$clientName} client");
+    }
+
+    /**
+     * Create factory if missing.
      *
      * @param ContainerBuilder $container
      */
-    private function createFactory(ContainerBuilder $container)
+    private function createFactoryIfMissing(ContainerBuilder $container)
     {
-        $container->setDefinition('redis.factory', new Definition(
+        if (!$container->hasDefinition(Factory::class)) {
+            $container->setDefinition(Factory::class, new Definition(
             Factory::class,
             [
                 new Reference('drift.event_loop'),
             ]
         ));
+        }
     }
 
     /**
@@ -78,7 +96,7 @@ class RedisCompilerPass implements CompilerPassInterface
      *
      * @return string
      */
-    private function createClient(
+    private function createClientDefinition(
         ContainerBuilder $container,
         array $configuration
     ): string {
@@ -94,7 +112,7 @@ class RedisCompilerPass implements CompilerPassInterface
             );
 
             $definition->setFactory([
-                new Reference('redis.factory'),
+                new Reference(Factory::class),
                 'createLazyClient',
             ]);
 
