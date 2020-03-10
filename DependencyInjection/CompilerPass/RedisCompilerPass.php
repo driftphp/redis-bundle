@@ -35,7 +35,7 @@ class RedisCompilerPass implements CompilerPassInterface
         $clientsConfiguration = $container->getParameter('redis.clients_configuration');
 
         foreach ($clientsConfiguration as $clientName => $clientConfiguration) {
-            $this->createClient(
+            static::createClient(
                 $container,
                 $clientName,
                 $clientConfiguration
@@ -50,25 +50,39 @@ class RedisCompilerPass implements CompilerPassInterface
      * @param string           $clientName
      * @param array            $configuration
      */
-    protected function createClient(
+    public static function createClient(
         ContainerBuilder $container,
         string $clientName,
         array $configuration
     ) {
-        $this->createFactoryIfMissing($container);
-        $clientAlias = $this->createClientDefinition($container, $configuration);
+        self::createFactoryIfMissing($container);
+        $definitionName = "redis.{$clientName}_client";
 
-        $container->setAlias(
-            "redis.{$clientName}_client",
-            $clientAlias
+        $definition = new Definition(
+            Client::class,
+            [
+                RedisUrlBuilder::buildUrlByConfiguration($configuration),
+            ]
         );
 
+        $definition->setFactory([
+            new Reference(Factory::class),
+            'createLazyClient',
+        ]);
+
+        if ($configuration['preload']) {
+            $definition->addTag('preload', [
+                'method' => 'ping',
+            ]);
+        }
+
+        $container->setDefinition($definitionName, $definition);
         $container->setAlias(
             Client::class,
-            $clientAlias
+            $definitionName
         );
 
-        $container->registerAliasForArgument($clientAlias, Client::class, "{$clientName} client");
+        $container->registerAliasForArgument($definitionName, Client::class, "{$clientName} client");
     }
 
     /**
@@ -76,7 +90,7 @@ class RedisCompilerPass implements CompilerPassInterface
      *
      * @param ContainerBuilder $container
      */
-    private function createFactoryIfMissing(ContainerBuilder $container)
+    private static function createFactoryIfMissing(ContainerBuilder $container)
     {
         if (!$container->hasDefinition(Factory::class)) {
             $container->setDefinition(Factory::class, new Definition(
@@ -86,57 +100,5 @@ class RedisCompilerPass implements CompilerPassInterface
             ]
         ));
         }
-    }
-
-    /**
-     * Create client and return it's reference.
-     *
-     * @param ContainerBuilder $container
-     * @param array            $configuration
-     *
-     * @return string
-     */
-    private function createClientDefinition(
-        ContainerBuilder $container,
-        array $configuration
-    ): string {
-        $clientHash = $this->getConfigurationHash($configuration);
-
-        $definitionName = "redis.client.$clientHash";
-        if (!$container->hasDefinition($definitionName)) {
-            $definition = new Definition(
-                Client::class,
-                [
-                    RedisUrlBuilder::buildUrlByConfiguration($configuration),
-                ]
-            );
-
-            $definition->setFactory([
-                new Reference(Factory::class),
-                'createLazyClient',
-            ]);
-
-            if ($configuration['preload']) {
-                $definition->addTag('preload', [
-                    'method' => 'ping',
-                ]);
-            }
-
-            $container->setDefinition($definitionName, $definition);
-        }
-
-        return $definitionName;
-    }
-
-    /**
-     * Get configuration hash.
-     *
-     * @param array $configuration
-     *
-     * @return string
-     */
-    private function getConfigurationHash(array $configuration)
-    {
-        return substr(md5(json_encode($configuration)), 0, 7);
     }
 }

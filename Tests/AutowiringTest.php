@@ -62,6 +62,7 @@ class AutowiringTest extends BaseFunctionalTest
                 'clients' => [
                     'users' => [
                         'host' => '127.0.0.1',
+                        'preload' => false,
                     ],
                     'orders' => [
                         'host' => '127.0.0.2',
