@@ -20,6 +20,10 @@
     "mmoreram/base-bundle": "^2.1"
   },
 
+  "require-dev": {
+    "phpunit/phpunit": "7.5.17"
+  },
+
   "autoload": {
     "psr-4": {
       "Drift\\Redis\\": "."
